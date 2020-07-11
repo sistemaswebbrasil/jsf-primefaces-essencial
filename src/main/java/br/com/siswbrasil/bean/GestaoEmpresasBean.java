@@ -14,6 +14,7 @@ import br.com.siswbrasil.model.RamoAtividade;
 import br.com.siswbrasil.model.TipoEmpresa;
 import br.com.siswbrasil.repository.EmpresaRepository;
 import br.com.siswbrasil.repository.RamoAtividadeRepository;
+import br.com.siswbrasil.service.CadastroEmpresaService;
 import br.com.siswbrasil.util.FacesMessages;
 
 @Named
@@ -29,13 +30,36 @@ public class GestaoEmpresasBean implements Serializable {
 	private RamoAtividadeRepository ramoAtividadeRepository;
 
 	@Inject
+	private CadastroEmpresaService cadastroEmpresaService;
+
+	@Inject
 	private FacesMessages messages;
 
 	private List<Empresa> listaEmpresas;
 
 	private String termoPesquisa;
-	
+
 	private Converter ramoAtividadeConverter;
+
+	private Empresa empresa;
+
+	public void prepararNovaEmpresa() {
+		empresa = new Empresa();
+	}
+
+	public void salvar() {
+		cadastroEmpresaService.salvar(empresa);
+
+		if (jaHouvePesquisa()) {
+			pesquisar();
+		}
+
+		messages.info("Empresa cadastrada com sucesso!");
+	}
+
+	private boolean jaHouvePesquisa() {
+		return termoPesquisa != null && !"".equals(termoPesquisa);
+	}
 
 	public void pesquisar() {
 		listaEmpresas = empresaRepository.pesquisar(termoPesquisa);
@@ -48,14 +72,14 @@ public class GestaoEmpresasBean implements Serializable {
 	public void todasEmpresas() {
 		listaEmpresas = empresaRepository.todas();
 	}
-	
-    public List<RamoAtividade> completarRamoAtividade(String termo) {
-        List<RamoAtividade> listaRamoAtividades = ramoAtividadeRepository.pesquisar(termo);
-        
-        ramoAtividadeConverter = new RamoAtividadeConverter(listaRamoAtividades);
-        
-        return listaRamoAtividades;
-    }	
+
+	public List<RamoAtividade> completarRamoAtividade(String termo) {
+		List<RamoAtividade> listaRamoAtividades = ramoAtividadeRepository.pesquisar(termo);
+
+		ramoAtividadeConverter = new RamoAtividadeConverter(listaRamoAtividades);
+
+		return listaRamoAtividades;
+	}
 
 	public List<Empresa> getListaEmpresas() {
 		return listaEmpresas;
@@ -75,6 +99,14 @@ public class GestaoEmpresasBean implements Serializable {
 
 	public Converter getRamoAtividadeConverter() {
 		return ramoAtividadeConverter;
+	}
+
+	public Empresa getEmpresa() {
+		return empresa;
+	}
+
+	public void setEmpresa(Empresa empresa) {
+		this.empresa = empresa;
 	}
 	
 	
