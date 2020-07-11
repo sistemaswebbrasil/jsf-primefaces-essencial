@@ -54,19 +54,34 @@ public class GestaoEmpresasBean implements Serializable {
 		ramoAtividadeConverter = new RamoAtividadeConverter(Arrays.asList(empresa.getRamoAtividade()));
 	}
 
-	public void salvar() {
-		cadastroEmpresaService.salvar(empresa);
+    public void salvar() {
+        cadastroEmpresaService.salvar(empresa);
+        
+        atualizarRegistros();
+        
+        messages.info("Empresa salva com sucesso!");
+        
+        RequestContext.getCurrentInstance().update(Arrays.asList(
+                "frm:empresasDataTable", "frm:messages"));
+    }
+    
+    private void atualizarRegistros() {
+        if (jaHouvePesquisa()) {
+            pesquisar();
+        } else {
+            todasEmpresas();
+        }
+    }
 
-		if (jaHouvePesquisa()) {
-			pesquisar();
-		} else {
-			todasEmpresas();
-		}
-
-		messages.info("Empresa cadastrada com sucesso!");
-
-		RequestContext.getCurrentInstance().update(Arrays.asList("frm:empresasDataTable", "frm:messages"));
-	}
+	public void excluir() {
+        cadastroEmpresaService.excluir(empresa);
+        
+        empresa = null;
+        
+        atualizarRegistros();
+        
+        messages.info("Empresa excluída com sucesso!");
+    }
 
 	private boolean jaHouvePesquisa() {
 		return termoPesquisa != null && !"".equals(termoPesquisa);
