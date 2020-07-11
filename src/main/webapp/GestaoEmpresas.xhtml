@@ -16,25 +16,65 @@
 	</f:metadata>
 	
 	<h:form>
-
-			<p:dataTable value="#{gestaoEmpresasBean.listaEmpresas}" var="empresa" emptyMessage="Nenhuma informação a ser exibida" paginator="true"
-				rows="5" paginatorPosition="bottom">
-				<p:column headerText="Razão social" sortBy="#{empresa.razaoSocial}">
-					<h:outputText value="#{empresa.razaoSocial}" />
-				</p:column>
-
-				<p:column headerText="Nome fantasia" sortBy="#{empresa.nomeFantasia}">
-					<h:outputText value="#{empresa.nomeFantasia}" />
-				</p:column>
-
-				<p:column headerText="Tipo empresa" sortBy="#{empresa.tipo}">
-					<h:outputText value="#{empresa.tipo}" />
-				</p:column>
-
-				<p:column headerText="Ramo atividade" sortBy="#{empresa.ramoAtividade.descricao}">
-					<h:outputText value="#{empresa.ramoAtividade.descricao}" />
-				</p:column>
-			</p:dataTable>
+		<p:messages autoUpdate="true" />
+	
+		<p:toolbar>
+			<f:facet name="left">
+				<p:inputText placeholder="Digite aqui um termo para pesquisa..." 
+					size="30" value="#{gestaoEmpresasBean.termoPesquisa}"/>
+				
+				<p:commandButton value="Pesquisar" icon="fa fa-search"
+					actionListener="#{gestaoEmpresasBean.pesquisar}" update="empresasDataTable"/>
+				
+				<span class="ui-separator">
+	                <span class="ui-icon ui-icon-grip-dotted-vertical" />
+	            </span>
+	            
+	            <p:commandButton value="Nova" icon="fa fa-plus" 
+	            	onclick="PF('empresaDialogWidgetVar').show()"/>
+	            
+				<span class="ui-separator">
+	                <span class="ui-icon ui-icon-grip-dotted-vertical" />
+	            </span>
+	            
+	            <p:commandButton title="Editar" icon="fa fa-edit" />
+	            
+	            <p:commandButton title="Excluir" icon="fa fa-trash" />
+	            
+				<span class="ui-separator">
+	                <span class="ui-icon ui-icon-grip-dotted-vertical" />
+	            </span>
+	            
+	            <p:commandButton title="Exportar para o Excel" icon="fa fa-file-excel-o" />			
+			</f:facet>
+		</p:toolbar>
+		
+		<p:spacer height="20px" />
+		
+		<p:dataTable id="empresasDataTable" value="#{gestaoEmpresasBean.listaEmpresas}"
+			var="empresa" emptyMessage="Nenhuma informação a ser exibida"
+			paginator="true" rows="10" paginatorPosition="bottom">
+			<p:column headerText="Razão social" sortBy="#{empresa.razaoSocial}">
+				<h:outputText value="#{empresa.razaoSocial}" />
+			</p:column>
+			
+			<p:column headerText="Nome fantasia">
+				<h:outputText value="#{empresa.nomeFantasia}" />
+			</p:column>
+			
+			<p:column headerText="Tipo empresa">
+				<h:outputText value="#{empresa.tipo}" />
+			</p:column>
+			
+			<p:column headerText="Ramo atividade">
+				<h:outputText value="#{empresa.ramoAtividade.descricao}" />
+			</p:column>
+		</p:dataTable>
+		
+		<p:dialog header="Nova empresa" widgetVar="empresaDialogWidgetVar"
+			modal="true" resizable="false" closeOnEscape="true">
+			<p:commandButton value="Teste!" />
+		</p:dialog>
 	</h:form>
 </ui:define>
 
