@@ -1,12 +1,15 @@
 package br.com.siswbrasil.bean;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.faces.convert.Converter;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+
+import org.primefaces.context.RequestContext;
 
 import br.com.siswbrasil.converter.RamoAtividadeConverter;
 import br.com.siswbrasil.model.Empresa;
@@ -50,11 +53,16 @@ public class GestaoEmpresasBean implements Serializable {
 	public void salvar() {
 		cadastroEmpresaService.salvar(empresa);
 
-		if (jaHouvePesquisa()) {
-			pesquisar();
-		}
+        if (jaHouvePesquisa()) {
+            pesquisar();
+        } else {
+            todasEmpresas();
+        }
 
 		messages.info("Empresa cadastrada com sucesso!");
+		
+        RequestContext.getCurrentInstance().update(Arrays.asList(
+                "frm:empresasDataTable", "frm:messages"));		
 	}
 
 	private boolean jaHouvePesquisa() {
